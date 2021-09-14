@@ -1,0 +1,174 @@
+{% extends 'lattes/layout.html' %}
+{% load lattes_extras %}
+{% load static %}
+
+{% block head %}
+
+<style>
+    #info{
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+<script src="{% static 'js/ordenar.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-3" style="text-align: center;">Produções</h1>
+                    <div id="info">
+                        <div>Mostrando {{ Producao_page.start_index }}-{{ Producao_page.end_index }} de {{ Producao_page.paginator.count }} resultados</div>
+                        <div>ordenar por:
+                            <select id="ordenar" form="filtro" name="ordenar">
+                                <option value="titulo">titulo [A-Z]</option>
+                                <option value="-titulo">titulo [Z-A]</option>
+                                <option value="-ano">mais recente</option>
+                                <option value="ano">mais antigo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for producao, palavras_chave, areas_conhecimento, setores_atividade in producoes%}
+                        <li class="list-group-item">
+                            <b>{{ producao.titulo}}.</b> {{ producao.ano }}.<br>
+                            Informado por: {{ producao.informado_por }} <br>
+                            <div class="drop-bnt"><i class="fa fa-plus-circle"></i></div>
+                            <div class="wrapper">
+                                <span style="color: #999999;"> Tipo: </span>{{ producao.tipo }}<span 
+                                style="color: #999999;"> Tipo Agrupador: </span> {{ producao.tipo_agrupador }}<br>
+                                <span style="color: #999999;">Palavras-Chave:</span>
+                                {% for p in palavras_chave %}
+                                {% if forloop.last %}
+                                {{ p.palavra }}
+                                {% else %}
+                                {{ p.palavra }},
+                                {% endif %} 
+                                {% empty %}
+                                Não informado
+                                {% endfor %}
+                                <br><span style="color: #999999;">Área de conhecimento:</span>
+                                {% for a in areas_conhecimento %}
+                                <br>{{forloop.counter}}. <span style="color: #999999;">Grande área: </span>{{a.grande_area | lower | replace:"_| " }} <span style="color: #999999;">Área: </span>{{ a.area | default:"Não informado" }} <span style="color: #999999;">Sub área: </span>{{ a.sub_area | default:"Não informado" }}
+                                {% if not forloop.last %}
+                                ,
+                                {% else %}
+                                <br>
+                                {% endif %} 
+                                {% empty %}
+                                Não informado
+                                {% endfor %}
+                                <span style="color: #999999;">Setor de aplicação: </span>
+                                {% for s in setores_atividade %}
+                                {{ s.setor }}
+                                {% if not forloop.last %}
+                                ,
+                                {% endif %}
+                                {% empty %}
+                                Não informado
+                            </div>
+                            {% endfor %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="paginator">
+                        {% if Producao_page.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}"><i class="fas fa-angle-double-left"></i></a>
+                        <a href="{% my_url Producao_page.previous_page_number 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-left"></i></a>
+                        {% endif %}
+                        <form method="GET">
+                            <input type="number" name="page" placeholder="{{Producao_page.number}}"> /
+                            {{Producao_page.paginator.num_pages}}
+                        </form>
+                        {% if Producao_page.has_next %}
+                        <a href="{% my_url Producao_page.next_page_number 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-right"></i></a>
+                        <a href="{% my_url Producao_page.paginator.num_pages 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-double-right"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block filtro %}
+<form method="GET" id="filtro">
+    <li>
+        <div class="drop-bnt">
+            Titulo <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{producoes_filtradas.form.titulo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Tipo <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{producoes_filtradas.form.tipo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Ano Produção <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper" style="padding-left: 50px;">
+            partir de: {{producoes_filtradas.form.ano__gte}} até:
+            {{producoes_filtradas.form.ano__lte}}
+        </div>
+    </li>
+    <li id="filtro-area">
+        <div class="drop-bnt">
+        Área Produção <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            <ul style="padding-left: 30px;">
+                {% for grande_area in grande_areas %}
+                <li>
+                    <div class="drop-bnt" style="padding: 0px;display: inline-block;">
+                        <i class="fa fa-plus-circle"></i>
+                    </div>
+                        <input type="checkbox" name="grandeArea" id="{{ grande_area.grande_area }}" value="{{ grande_area.grande_area }}">
+                        <label for="{{ grande_area.grande_area }}">{{ grande_area.grande_area | lower | capfirst | replace:"_| " | default:'Não informado' }}( {{ grande_area.total }} )</label>
+                    <div class="wrapper">
+                        <ul style="padding-left: 50px;">
+                        {% for area in areas %}
+                        {% if area.grande_area == grande_area.grande_area%}
+                        <li>
+                            <input type="checkbox" name="area" id="{{ grande_area.grande_area }}-{{ area.area }}" value="{{ area.area }}">
+                            <label for="{{ grande_area.grande_area }}-{{ area.area }}">{{ area.area | default:'Não informado' }}( {{ area.total }} )</label>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Informado Por <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{producoes_filtradas.form.informado_por}}
+        </div>
+    </li>
+    <div class="submit">
+        <input type="submit" value="Buscar" class="btn btn-light" id="btn-submit">
+        <button type="button" class="btn btn-light" onclick="Limpar()" id="btn-limpar">Limpar</button>
+    </div>
+</form>
+{% endblock %}

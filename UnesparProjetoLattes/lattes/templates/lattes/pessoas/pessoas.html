@@ -1,0 +1,135 @@
+{% extends 'lattes/layout.html' %}
+{% load static %}
+{% load lattes_extras %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/pessoas.css' %}">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="{% static 'js/ordenar.js' %}"></script>
+{% endblock %}
+{% block main %}
+<div class="card-header">
+    <h1 class="h3 mb-3">Pessoas</h1>
+    
+    <div id="info">
+        <div>Mostrando {{ page_pessoas.start_index }}-{{ page_pessoas.end_index }} de {{ page_pessoas.paginator.count }} resultados</div>
+        <div>ordenar por:
+            <select id="ordenar" form="filtro" name="ordenar">
+                <option value="nome">nome [A-Z]</option>
+                <option value="-nome">nome [Z-A]</option>
+               
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="w3-Container" style="margin-right: 25px;">
+    <ul class="w3-ul w3-card-4">
+    {% for pessoa in page_pessoas %}
+        <li class="w3-bar">
+            <p style="margin: 10px; color: grey; font-style: italic;"> Atualizado dia: {{pessoa.last_update}}  </p>
+            <div class="w3-bar">
+                <div class="w3-bar-item">
+                    <img class="curriculos-circleImage" src="{% static 'imagens/imagemGenericaPessoas.jpg' %}">
+                </div>
+
+
+                <div class="w3-bar-item;
+                    word-break: break-all;
+                    white-space: normal;">
+                
+                    <span class="w3-large" style="font-weight: 700; font-style: italic; ">{{pessoa.nome}}</span><br>
+                    <span><b>Vinculo:</b> {{pessoa.tipo_vinculo | lower | capfirst | replace:"_| " | default:'Não informado' }} desde {{pessoa.vinculo_data_inicio | default:'Não informado'}}</span><br>
+                    <span><b>Campus:</b> {{pessoa.campus | lower | capfirst | replace:"_| " | default:'Não informado' }} </span><br>
+                    <span><b>Formado em:</b> {{pessoa.curso_formacao | capfirst | default:'Não informado' }} - {{pessoa.faculdade_formacao | capfirst | default:'Não informado' }} - {{pessoa.ano_conclusao | default:'Não informado' }}</span><br>
+                    <span><b>Titulo:</b> {{pessoa.titulo | lower | capfirst | replace:"_| " | default:'Não informado'}}</span><br>
+                    
+                    <span></span>
+                </div>
+            </div>
+            <div class="w3-bar-item w3-right">
+                <button class="accordion">Visualizar</button>
+                <div class="accordion-body panel">
+                    <p>{{pessoa.resumo}}</p>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<div class="card-footer">
+    <div class="paginator">
+        {% if page_pessoas.has_previous %}
+        <a href="{% my_url 1 'page' request.GET.urlencode %}"><i class="fas fa-angle-double-left"></i></a>
+        <a href="{% my_url page_pessoas.previous_page_number 'page' request.GET.urlencode %}"><i
+                class="fas fa-angle-left"></i></a>
+        {% endif %}
+        <form method="GET">
+            <input type="number" name="page" placeholder="{{page_pessoas.number}}"> /
+            {{page_pessoas.paginator.num_pages}}
+        </form>
+        {% if page_pessoas.has_next %}
+        <a href="{% my_url page_pessoas.next_page_number 'page' request.GET.urlencode %}"><i
+                class="fas fa-angle-right"></i></a>
+        <a href="{% my_url page_pessoas.paginator.num_pages 'page' request.GET.urlencode %}"><i
+                class="fas fa-angle-double-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
+{% endblock %}
+{% block filtro %}
+<form method="GET" id="filtro">
+    <li>
+        <div class="drop-bnt">
+            Nome <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.nome}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Campus <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.campus}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Titulo <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.titulo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Vinculo <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.tipo_vinculo}}
+        </div>
+    </li>
+    <div class="submit">
+        <input type="submit" value="Buscar" class="btn btn-light" id="btn-submit">
+        <button type="button" class="btn btn-light" onclick="Limpar()" id="btn-limpar">Limpar</button>
+    </div>
+</form>
+{% endblock %}

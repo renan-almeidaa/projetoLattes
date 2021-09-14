@@ -1,0 +1,121 @@
+{% extends 'lattes/layout.html' %}
+{% load lattes_extras %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'js/ordenar.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-3" style="text-align: center;">Projetos</h1>
+                    <div id="info">
+                        <div>Mostrando {{ projeto_page.start_index }}-{{ projeto_page.end_index }} de {{ projeto_page.paginator.count }} resultados</div>
+                        <div>ordenar por:
+                            <select id="ordenar" form="filtro" name="ordenar">
+                                <option value="nome">titulo [A-Z]</option>
+                                <option value="-nome">titulo [Z-A]</option>
+                                <option value="-anoInicio">mais recente</option>
+                                <option value="anoInicio">mais antigo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for projeto in projeto_page %}
+                        <li class="list-group-item">
+                            <b>{{ projeto.nome | title }}</b>
+                            Projeto de {{ projeto.tipo | lower }} {{ projeto.situacao | lower}}, iniciado em {{ projeto.ano_inicio }} <br>
+                            Coordenador por {{ projeto.coordenador }} <br>
+                            Informado por {{ projeto.informado_por }} <br>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="paginator">
+                        {% if projeto_page.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-double-left"></i></a>
+                        <a href="{% my_url projeto_page.previous_page_number 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-left"></i></a>
+                        {% endif %}
+                        <form method="GET">
+                            <input type="number" name="page" placeholder="{{projeto_page.number}}"> /
+                            {{projeto_page.paginator.num_pages}}
+                        </form>
+                        {% if projeto_page.has_next %}
+                        <a href="{% my_url projeto_page.next_page_number 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-right"></i></a>
+                        <a href="{% my_url projeto_page.paginator.num_pages 'page' request.GET.urlencode %}"><i
+                                class="fas fa-angle-double-right"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block filtro %}
+<form method="GET" id="filtro">
+    <li>
+        <div class="drop-bnt">
+            Nome <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{projetos_filtradas.form.nome}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Ano Inicio <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{projetos_filtradas.form.ano_inicio}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Situacao <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper" id="filtroAno">
+            {{projetos_filtradas.form.situacao}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Tipo <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{projetos_filtradas.form.tipo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Coordenador <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{projetos_filtradas.form.coordenador}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Informado Por <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{projetos_filtradas.form.informado_por}}
+        </div>
+    </li>
+    <div class="submit">
+        <input type="submit" value="Buscar" class="btn btn-light" id="btn-submit">
+        <button type="button" class="btn btn-light" onclick="Limpar()" id="btn-limpar">Limpar</button>
+    </div>
+</form>
+{% endblock %}

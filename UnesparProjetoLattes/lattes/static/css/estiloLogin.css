@@ -1,0 +1,53 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #002661;
+}
+
+main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 484px;
+    background-color: white;
+    justify-content: space-between;
+}
+
+main input {
+    width: 315px;
+    height: 34px;
+    margin: 10px auto 10px;
+    display: block;
+    font-size: 18px;
+}
+
+main input[type='submit'] {
+    width: 315px;
+    height: 34px;
+    background-color: #002661;
+    color: white;
+    border: 0;
+}
+
+main img{
+    margin: 10px auto 10px;
+    display: block;
+}
+
+main p{
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    line-height: 46px;
+}

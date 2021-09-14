@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projeto Lattes</title>
+    <link rel="shortcut icon" href="{% static 'imagens/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" data-auto-replace-svg="nest"></script>
+    <script src="{% static 'js/layout.js' %}"></script>
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="content">
+        <aside class="sidebar">
+            <a href="#" class="sidebar-logo"><img src="{% static 'imagens/sidebar-logo-lattesunespar.png' %}" alt="logo lattes unespar">Lattes Unespar</a>
+            <nav class="links">
+                <ul> 
+                    <li>
+                        <div class="link-title">Pessoas</div>
+                        <ul>
+                            <li>
+                                <a href="{% url 'lattes:pessoas' %}">
+                                    <i class="fas fa-user-friends"></i>
+                                    Quais pessoas?
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="link-title">Produção</div>
+                        <ul>
+                            <li>
+                                <a href="{% url 'lattes:producoes' %}">
+                                    <i class="fas fa-book"></i>
+                                    Quais produções?
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'lattes:perfilProducao' %}">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Qual perfil produções?
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="link-title">Projeto</div>
+                        <ul>
+                            <li>
+                                <a href="{% url 'lattes:projetos' %}">
+                                    <i class="fas fa-calendar"></i>
+                                    Quais projetos?
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="link-title">Filtros</div>
+                        <ul id="filtros">
+                            {% block filtro %}
+                            {% endblock %}
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <div class="drop-btn-sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                    </svg>
+                </div>
+
+                <div class="drop-bnt" id="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                        <path fill-rule="evenodd"
+                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                    </svg>
+                    {{request.user.username}}
+                    <i class="fas fa-angle-down"></i>
+                </div>
+                <div class="wrapper" id="user-page">
+                    <ul class="user-item-list">
+                        <li>
+                            <a href="{% url 'lattes:logout' %}"><i class="fas fa-sign-out-alt"></i>Sair</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </nav>
+            <main>
+                {% block main %}
+                {% endblock %}
+            </main>
+        </div>
+</body>
+
+</html>

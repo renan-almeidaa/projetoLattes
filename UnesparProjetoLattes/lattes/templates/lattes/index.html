@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Lattes</title>
+    <link rel="stylesheet" href="{% static 'css/estiloIndex.css' %}">
+    <link rel="shortcut icon" href="{% static 'imagens/favicon.ico'%}" type="image/x-icon">
+    <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+</head>
+
+<body>
+    <header>
+        <div id="grid-header">
+            <div class="grid-item-header">
+                <h1>LATTES UNESPAR</h1>
+            </div>
+            <div class="grid-item-header"><img class="imagem" src="{% static 'imagens/logo-lattesunespar-pequena.png' %}"
+                    alt="logo lattes unespar"></div>
+        </div>
+    </header>
+    <div>
+        <div id="grid-page">
+            <a href="{% url 'lattes:pessoas' %}">
+                <div class="grid-item-page">
+                    <h2>Pessoas</h2>
+                    <p><i class="fa fa-male" style="font-size:120px"></i></p>
+                    <p>As pessoas da unespar que possuem um curriculo<br> cadastrado e informações sobre elas.</p>
+                </div>
+            </a>
+            <a href="{% url 'lattes:producoes' %}">
+                <div class="grid-item-page">
+                    <h2>Produção</h2>
+                    <p><i class="fa fa-book" style="font-size:120px"></i></p>
+                    <p>Todas as produções e informações sobre elas</p>
+                </div>
+            </a>
+            <a href="#">
+                <div class="grid-item-page">
+                    <h2>Projetos</h2>
+                    <p><i class="fa fa-calendar w3-margin-bottom w3-text-theme" style="font-size:120px"></i></p>
+                    <p>Todas os projetos e informações sobre eles</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
