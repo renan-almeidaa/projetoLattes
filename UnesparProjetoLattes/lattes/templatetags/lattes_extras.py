@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import template
 
 register = template.Library()
@@ -25,3 +26,15 @@ def replace(value, arg):
 
     what, to = arg.split('|')
     return value.replace(what, to)
+
+
+@register.filter
+def convert_str_date(value):
+    if(len(value)>0):
+        dia = value[0:2]
+        mes = value[2:4]
+        ano = value[4:len(value)]
+        value = dia + "/" + mes + "/" + ano
+    else: value = "Não informado"
+
+    return value

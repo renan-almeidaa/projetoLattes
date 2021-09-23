@@ -27,7 +27,7 @@
     <ul class="w3-ul w3-card-4">
     {% for pessoa in page_pessoas %}
         <li class="w3-bar">
-            <p style="margin: 10px; color: grey; font-style: italic;"> Atualizado dia: {{pessoa.last_update}}  </p>
+            <p style="margin: 10px; color: grey; font-style: italic;"> Atualizado dia: {{ pessoa.last_update| convert_str_date }}  </p>
             <div class="w3-bar">
                 <div class="w3-bar-item">
                     <img class="curriculos-circleImage" src="{% static 'imagens/imagemGenericaPessoas.jpg' %}">

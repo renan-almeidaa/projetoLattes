@@ -1,0 +1,218 @@
+{% extends 'lattes/layout.html' %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.1.0/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid p-0">
+    <h1 class="h3 mb-3">Perfil das pessoas</h1>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card flex-fill w-100">
+                <div class="card-header">
+                    <h5 class="card-title">Enquadramento</h5>
+                    <h6 class="card-subtitle text-muted">Distribuição de pessoas por enquadramento.</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="ChartEnq" width="570" height="300"
+                            style="display: block; width: 570px; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Tipo de Vinculo</h5>
+                    <h6 class="card-subtitle text-muted">Distribuição de pessoas por tipo de vinculo.</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="ChartVinculo" width="570" height="300"
+                            style="display: block; width: 570px; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Título</h5>
+                    <h6 class="card-subtitle text-muted">Distribuição de pessoas por título.</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart chart-sm">
+                        <canvas id="ChartTitulo" width="570" height="300"
+                            style="display: block; width: 570px; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var tipoEnq = new Chart(document.getElementById('ChartEnq'), {
+            type: 'bar',
+            data: {
+                labels: {% autoescape off %}{{ enquadramentos }}{% endautoescape %},
+                datasets: [{
+                    label: '# de Pessoas',
+                    data: {{ totalEnq }},
+                    backgroundColor: "#3f80ea",
+                    borderColor: "#3f80ea",
+                    hoverBackgroundColor: "#3f80ea",
+                    hoverBorderColor: "#3f80ea",
+                    barPercentage: .75,
+                    categoryPercentage: .5
+                }]
+            },
+        });
+        $("#ChartEnq").click(
+            function (event) {
+                var activepoints = tipoEnq.getElementsAtEvent(event);
+                if (activepoints.length > 0) {
+                    var clickedIndex = activepoints[0]["_index"];
+                    var tipo = tipoEnq.data.labels[clickedIndex];
+                    var url_atual = window.location.href;
+                    if(url_atual.length==45){
+                        var filtro_atual = "#";
+                    }
+                    else{
+                        var index_filtro = url_atual.indexOf("?");
+                        var filtro_atual = url_atual.slice(index_filtro+1);
+                    }
+
+                    window.location.href = "{% url 'lattes:pessoas' %}?" + filtro_atual + "&enquadramento=" + tipo
+                }
+                else {
+                }
+            }
+        );
+	});
+</script>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var tipoVinculo = new Chart(document.getElementById('ChartVinculo'), {
+            type: 'bar',
+            data: {
+                labels: {% autoescape off %}{{ vinculos }}{% endautoescape %},
+                datasets: [{
+                    label: '# de Pessoas',
+                    data: {{ totalVinculos }},
+                    backgroundColor: "#3f80ea",
+                    borderColor: "#3f80ea",
+                    hoverBackgroundColor: "#3f80ea",
+                    hoverBorderColor: "#3f80ea",
+                    barPercentage: .75,
+                    categoryPercentage: .5
+                }]
+            },
+        });
+        $("#ChartVinculo").click(
+            function (event) {
+                var activepoints = tipoVinculo.getElementsAtEvent(event);
+                if (activepoints.length > 0) {
+                    var clickedIndex = activepoints[0]["_index"];
+                    var tipo = tipoVinculo.data.labels[clickedIndex];
+                    var url_atual = window.location.href;
+                    if(url_atual.length==45){
+                        var filtro_atual = "#";
+                    }
+                    else{
+                        var index_filtro = url_atual.indexOf("?");
+                        var filtro_atual = url_atual.slice(index_filtro+1);
+                    }
+
+                    window.location.href = "{% url 'lattes:pessoas' %}?" + filtro_atual + "&tipo_vinculo=" + tipo
+                }
+                else {
+                }
+            }
+        );
+	});
+</script>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var tipoTitulo = new Chart(document.getElementById('ChartTitulo'), {
+            type: 'bar',
+            data: {
+                labels: {% autoescape off %}{{ titulos }}{% endautoescape %},
+                datasets: [{
+                    label: '# de Pessoas',
+                    data: {{ totalTitulos }},
+                    backgroundColor: "#3f80ea",
+                    borderColor: "#3f80ea",
+                    hoverBackgroundColor: "#3f80ea",
+                    hoverBorderColor: "#3f80ea",
+                    barPercentage: .75,
+                    categoryPercentage: .5
+                }]
+            },
+        });
+        $("#ChartTitulo").click(
+            function (event) {
+                var activepoints = tipoTitulo.getElementsAtEvent(event);
+                if (activepoints.length > 0) {
+                    var clickedIndex = activepoints[0]["_index"];
+                    var tipo = tipoTitulo.data.labels[clickedIndex];
+                    var url_atual = window.location.href;
+                    if(url_atual.length==45){
+                        var filtro_atual = "#";
+                    }
+                    else{
+                        var index_filtro = url_atual.indexOf("?");
+                        var filtro_atual = url_atual.slice(index_filtro+1);
+                    }
+
+                    window.location.href = "{% url 'lattes:pessoas' %}?" + filtro_atual + "&titulo=" + tipo
+                }
+                else {
+                }
+            }
+        );
+	});
+</script>
+
+{% endblock %}
+{% block filtro %}
+<form method="GET" id="filtro">
+    <li>
+        <div class="drop-bnt">
+            Enquadramento <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.enquadramento}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Tipo de Vinculo <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.tipo_vinculo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Titulo <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+           {{pessoas_filtradas.form.titulo}}
+            
+        </div>
+    </li>
+    
+    <div class="submit">
+        <input type="submit" value="Buscar" class="btn btn-light" id="btn-submit">
+        <button type="button" class="btn btn-light" onclick="Limpar()" id="btn-limpar">Limpar</button>
+    </div>
+</form>
+{% endblock %}
+

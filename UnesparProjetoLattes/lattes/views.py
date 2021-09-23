@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from .models import Producao, Pessoas, Projeto, AreaConhecimento
 from .filters import ProducaoFilter, PessoasFilter, ProjetoFilter
+
 import re
 
 def grande_areas(list):
@@ -44,10 +45,38 @@ def pessoas(request):
     page_number = request.GET.get('page')
     page_pessoas = p.get_page(page_number)
     
+    
+
     context["page_pessoas"] = page_pessoas
     context["pessoas_filtradas"] = pessoas_filtradas
    
     return render(request, "lattes/pessoas/pessoas.html", context)
+
+@login_required
+def perfilPessoas(request):
+    context = {}
+
+    pessoas_filtradas = PessoasFilter(
+        request.GET,
+        queryset=Pessoas.objects.all()
+    )
+
+    query = pessoas_filtradas.qs.values('enquadramento').annotate(total=Count('id')).order_by('enquadramento')
+    context['enquadramentos'] = [dic['enquadramento'] for dic in query]
+    context['totalEnq'] = [dic['total'] for dic in query]
+
+    query = pessoas_filtradas.qs.values('tipo_vinculo').annotate(total=Count('id')).order_by('tipo_vinculo')
+    context['vinculos'] = [dic['tipo_vinculo'] for dic in query]
+    context['totalVinculos'] = [dic['total'] for dic in query]
+
+    query = pessoas_filtradas.qs.values('titulo').annotate(total=Count('id')).order_by('titulo')
+    context['titulos'] = [dic['titulo'] for dic in query]
+    context['totalTitulos'] = [dic['total'] for dic in query]
+
+    context["pessoas_filtradas"] = pessoas_filtradas
+    return render(request, "lattes/pessoas/perfilPessoas.html", context)
+
+
 
 @login_required
 def producoes(request):
