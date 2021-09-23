@@ -21,8 +21,8 @@ class PessoasFilter(django_filters.FilterSet):
     campus = django_filters.CharFilter(field_name='campus', lookup_expr='contains', widget=TextInput(attrs={'placeholder': 'Digite campus'}))
     titulo =  django_filters.CharFilter(field_name='titulo', lookup_expr='contains', widget=TextInput(attrs={'placeholder': 'Digite titulo'}))
     tipo_vinculo = django_filters.CharFilter(field_name='tipo_vinculo', lookup_expr='contains', widget=TextInput(attrs={'placeholder': 'Digite tipo de vinculo'}))
-    
-    
+    enquadramento = django_filters.CharFilter(field_name='enquadramento', lookup_expr='contains', widget=TextInput(attrs={'placeholder': 'Digite enquadramento'}))
+ 
 situacao_choices = (
     ('CONCLUIDO', 'Concluido'),
     ('EM_ANDAMENTO', 'Em Andamento')

@@ -43,7 +43,7 @@
                     <span><b>Campus:</b> {{pessoa.campus | lower | capfirst | replace:"_| " | default:'Não informado' }} </span><br>
                     <span><b>Formado em:</b> {{pessoa.curso_formacao | capfirst | default:'Não informado' }} - {{pessoa.faculdade_formacao | capfirst | default:'Não informado' }} - {{pessoa.ano_conclusao | default:'Não informado' }}</span><br>
                     <span><b>Titulo:</b> {{pessoa.titulo | lower | capfirst | replace:"_| " | default:'Não informado'}}</span><br>
-                    
+                    <span><b>Enquadramento:</b> {{pessoa.enquadramento | lower | capfirst | replace:"_| " | default:'Não informado'}}</span><br>
                     <span></span>
                 </div>
             </div>
@@ -125,6 +125,14 @@
         </div>
         <div class="wrapper">
             {{pessoas_filtradas.form.tipo_vinculo}}
+        </div>
+    </li>
+    <li>
+        <div class="drop-bnt">
+            Enquadramento <i class="fa fa-angle-down"></i>
+        </div>
+        <div class="wrapper">
+            {{pessoas_filtradas.form.enquadramento}}
         </div>
     </li>
     <div class="submit">
