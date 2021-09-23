@@ -27,3 +27,7 @@ $ python3 manage.py runserver
 
 And that's it!! The project must be running... 
 Now copy the URL that looks like this: http://127.0.0.1:8000/ and open it in a browser.
+
+## 🔑 Login Screen
+User: admin \
+Password: WXrHhQJ@R3bX:`;F">/%jP?Bk4c/ip
